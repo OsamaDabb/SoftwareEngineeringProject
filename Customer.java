@@ -7,6 +7,7 @@ public class Customer{
   private String firstName;
   private String lastName;
   private int age;
+  private boolean isFrozen; //true if account has been frozen, false otherwise
   private double Balance; //Customers account balance 
   private boolean hasCreditCard = false; //true if account has a card, false otherwise
   private double creditCardDue = 0;  //amount of money charged on account's credit card
@@ -26,6 +27,7 @@ public class Customer{
     }
   }
   
+  //newTransaction method that changes account value, and adds new transaction to transactions ArrayList
   public void newTransaction(String transactionName, double transactionValue){
     Hashmap<String, double>  n = new HashMap<>();
     n.put(transactionName, transactionValue);
@@ -33,6 +35,8 @@ public class Customer{
     balance += transactionValue;
   }
   
+  
+  //Getter and setter methods for all the private variables associated with the customer class
   public String getUsername(){
     return username;
   }
@@ -57,6 +61,13 @@ public class Customer{
    return age; 
   }
   
+  public boolean isFrozen(){
+    return isFrozen; 
+  }
+  
+  public void setFrozen(boolean newVal){
+    isFrozen = newVal;
+  }
   public double getBalance(){
     return balance; 
   }
