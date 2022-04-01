@@ -32,4 +32,52 @@ public class Customer{
     transactions.add(n);
     balance += transactionValue;
   }
+  
+  public String getUsername(){
+    return username;
+  }
+  
+  public String getPassword(){
+    return password; 
+  }
+  
+  public void setPassword(String newPassword){
+    password = newPassword; 
+  }
+  
+  public String getFirstName(){
+    return firstName; 
+  }
+  
+  public String getLastName(){
+    return lastName; 
+  }
+  
+  public int getAge(){
+   return age; 
+  }
+  
+  public double getBalance(){
+    return balance; 
+  }
+  
+  public boolean hasCreditCard(){
+    return hasCreditCard;
+  }
+  
+  public void setCreditCard(boolean newCard){
+   hasCreditCard = newCard;
+  }
+  
+  public double getCreditCardDue(){
+    return creditCardDue 
+  }
+  
+  public void setCreditCardDue(double newVal){
+   creditCardDue = newVal;
+  }
+  
+  public ArrayList getTransactions(){
+   return transactions; 
+  }
 }
