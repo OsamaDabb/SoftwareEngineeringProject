@@ -2,13 +2,13 @@ import java.util.*;
 
 public class Customer{
   //initiating all variables for customer class
-  private String username;
+  private final String username;
   private String password;
-  private String firstName;
-  private String lastName;
+  private final String firstName;
+  private final String lastName;
   private int age;
   private boolean isFrozen; //true if account has been frozen, false otherwise
-  private double Balance; //Customers account balance 
+  private double balance; //Customers account balance
   private boolean hasCreditCard = false; //true if account has a card, false otherwise
   private double creditCardDue = 0;  //amount of money charged on account's credit card
   private ArrayList<HashMap<String, Double>> transactions = new ArrayList<>(); //debit transactions made by account
@@ -29,7 +29,7 @@ public class Customer{
   
   //newTransaction method that changes account value, and adds new transaction to transactions ArrayList
   public void newTransaction(String transactionName, double transactionValue){
-    Hashmap<String, double>  n = new HashMap<>();
+    HashMap<String, Double>  n = new HashMap<>();
     n.put(transactionName, transactionValue);
     transactions.add(n);
     balance += transactionValue;
@@ -81,7 +81,7 @@ public class Customer{
   }
   
   public double getCreditCardDue(){
-    return creditCardDue 
+    return creditCardDue;
   }
   
   public void setCreditCardDue(double newVal){
