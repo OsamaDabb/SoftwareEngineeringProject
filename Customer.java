@@ -148,4 +148,10 @@ public class Customer{
   public ArrayList getTransactions(){
    return transactions; 
   }
+  
+  public ArrayList getQueries(){
+    
+    return queries;
+    
+  }
 }
