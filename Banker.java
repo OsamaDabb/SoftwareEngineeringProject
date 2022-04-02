@@ -20,7 +20,7 @@ public class Banker{
         throw new IllegalArgumentException("Already has a credit card");
       if(C.getAge() < 18) // Minors can't have cards
         throw new IllegalArgumentException("Underage");
-      C.setCreditCard(1);
+      C.setCreditCard(true);
     
     }
   
@@ -30,23 +30,23 @@ public class Banker{
         throw new IllegalArgumentException("No Card Found");
       if(C.getCreditCardDue()!=0) // They need to settle all their bills before closing it
         throw new IllegalArgumentException("Bills not paid");
-      C.setCreditCard(0);
+      C.setCreditCard(false);
 
     }
   
     public void freeze(Customer C){
      
-      if(C.getIsFrozen()==1) // The accoutn is already frozen
+      if(C.getIsFrozen()) // The accoutn is already frozen
         throw new IllegalArgumentException("Account already frozen");
-      C.setIsFrozen(1);
+      C.setIsFrozen(true);
       
     }
   
     public void defreeze(Customer C){
 
-        if(C.getIsFrozen()==0) // The account was already defrozen
+        if(!C.getIsFrozen()) // The account was already defrozen
           throw new IllegalArgumentException("Account already defrozen");
-        C.setIsFrozen(0);
+        C.setIsFrozen(false);
 
      }
   

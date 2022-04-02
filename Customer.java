@@ -12,6 +12,7 @@ public class Customer{
   private boolean hasCreditCard = false; //true if account has a card, false otherwise
   private double creditCardDue = 0;  //amount of money charged on account's credit card
   private ArrayList<HashMap<String, Double>> transactions = new ArrayList<>(); //debit transactions made by account
+  private ArraysList<String> queries = new ArrayList<>();
   
   
   public Customer(String u, String p, String fname, String lname, int a, double ba){
