@@ -1,6 +1,9 @@
 import com.opencsv.*;
 import com.opencsv.exceptions.CsvValidationException;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.io.*;
 
@@ -33,11 +36,13 @@ public class main{
                         System.out.print("Password: ");
                         while(attempts > 0){
                             String password = scanner.nextLine();
+                            //correct password
                             if(password == currentBanker.getPassword()){
                                 System.out.println("Signing in...");
                                 bankerLoop(currentBanker, Customers);
                                 break;
                             }
+                            //incorrect password
                             else{
                                 attempts--;
                                 System.out.println("Incorrect, you have " + attempts + " attempts left.");
@@ -46,6 +51,7 @@ public class main{
                         break label;
 
                     }
+                    //if an invalid username is given
                     else{
                         System.out.println("User does not exist");
                     }
@@ -62,11 +68,13 @@ public class main{
                         System.out.print("Password: ");
                         while(attempts > 0){
                             String password = scanner.nextLine();
+                            //correct password given
                             if(password.equals(currentCustomer.getPassword())){
                                 System.out.println("Signing in...");
                                 customerLoop(currentCustomer);
                                 break;
                             }
+                            //incorrect password
                             else{
                                 attempts--;
                                 System.out.println("Incorrect, you have " + attempts + " attempts left.");
@@ -75,12 +83,13 @@ public class main{
                         break label;
 
                     }
+                    //if invalid username is given
                     else{
                         System.out.println("User does not exist");
                     }
                     break;
 
-
+                //if user requests to quit
                 case "quit":
                     break label;
                 default:
@@ -90,7 +99,7 @@ public class main{
             System.out.print("would you like to [quit] or log in as a new [customer] or [banker]?: ");
         }
 
-
+        //saves any changes to the csv file
         saveData(Bankers, Customers);
     }
 
@@ -194,6 +203,14 @@ public class main{
 
     public static void saveData(HashMap<String, Banker> Bankers, HashMap<String, Customer> Customers){
         File file = new File("catalogue.csv");
+        //saving the previous iteration of catalogue as a backup
+        File backup = new File("backup.csv");
+        Path path = (Path) Paths.get("catalogue.csv");
+        Path out = Paths.get("backup.csv");
+        try{
+            Files.copy(path,out);
+        }
+        catch(IOException e){}
         try {
             // create FileWriter object with file as parameter
             FileWriter outputfile = new FileWriter(file);
