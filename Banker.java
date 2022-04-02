@@ -104,4 +104,8 @@ public class Banker{
 
     }
 
+    public String getUsername(){
+        return username;
+    }
+
 }

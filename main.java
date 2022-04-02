@@ -16,12 +16,70 @@ public class main{
         HashMap<String, Customer> Customers = (HashMap<String, Customer>) Data.get(1);
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Are you a [customer] or [banker]?: ");
+        System.out.println("Welcome to COVA Bank");
+        System.out.print("Are you a [customer] or [banker] or creating a [new] account?: ");
         label:
         while(true){
             String response = scanner.nextLine().toLowerCase();
 
             switch (response) {
+                //creating a new account
+                case "new":
+                    System.out.print("Would you like to create a [customer] or [banker] account?: ");
+                    String resp = scanner.nextLine();
+                    switch(resp){
+                        case "customer":
+                            System.out.print("First Name?: ");
+                            String f = scanner.nextLine();
+                            System.out.print("Last Name?: ");
+                            String l = scanner.nextLine();
+                            System.out.print("Username?: ");
+                            String u = scanner.nextLine();
+                            System.out.print("Password?: ");
+                            String p = scanner.nextLine();
+                            System.out.print("Age?: ");
+                            int a = scanner.nextInt();
+                            if(a < 13){
+                                System.out.println("Sorry, you must be at least 13 to create an account.");
+                            }
+                            else{
+                                System.out.print("How much would you like to initial deposit?: ");
+                                double ba = scanner.nextDouble();
+                                System.out.println("Creating account...");
+                                Customer newCustomer = new Customer(u,p,f,l,a,ba);
+                                Customers.put(u,newCustomer);
+                                System.out.println("Welcome to CAVO bank, " + f + " " + l + "!");
+                                System.out.println("Returning to login screen...");
+                            }
+                            break;
+
+                        case "banker":
+                            System.out.print("First Name?: ");
+                            String fb = scanner.nextLine();
+                            System.out.print("Last Name?: ");
+                            String lb = scanner.nextLine();
+                            System.out.print("Username?: ");
+                            String ub = scanner.nextLine();
+                            System.out.print("Password?: ");
+                            String pb = scanner.nextLine();
+                            System.out.print("Enter authentication code: ");
+                            if(scanner.nextLine().equals("COVAcode")){
+                                System.out.println("Creating account...");
+                                Banker newBanker = new Banker(ub,pb,fb,lb);
+                                Bankers.put(ub,newBanker);
+                                System.out.println("Welcome to CAVO bank, " + fb + " " + lb + "!");
+                                System.out.println("Returning to login screen...");
+                            }
+                            else{
+                                System.out.println("Incorrect authorization code, please contact support.");
+                            }
+                            break;
+
+
+
+                    }
+                    break;
+
                 //if the user is a banker, ask for username and check valid password (only three attempts) then
                 //activate banker control flow
                 case "banker":
@@ -36,7 +94,7 @@ public class main{
                             //correct password
                             if(password.equals(currentBanker.getPassword())){
                                 System.out.println("Signing in...");
-                                bankerLoop(currentBanker, Customers);
+                                Bankers = bankerLoop(currentBanker, Customers, Bankers);
                                 break;
                             }
                             //incorrect password
@@ -68,7 +126,7 @@ public class main{
                             //correct password given
                             if(password.equals(currentCustomer.getPassword())){
                                 System.out.println("Signing in...");
-                                customerLoop(currentCustomer);
+                                Customers = customerLoop(currentCustomer, Customers);
                                 break;
                             }
                             //incorrect password
@@ -98,17 +156,19 @@ public class main{
 
         //saves any changes to the csv file
         System.out.println(Customers.get("vish2"));
+        System.out.println("Saving and exiting...");
         saveData(Bankers, Customers);
     }
 
-    private static void bankerLoop(Banker currentBanker, HashMap<String,Customer> customers) {
+    private static HashMap<String, Banker> bankerLoop(Banker currentBanker,
+                                                      HashMap<String,Customer> customers, HashMap<String, Banker> bankers) {
 
         Scanner in = new Scanner(System.in);
         System.out.println("Hi " + currentBanker.getName());
         int response = -1;
-        while(response != 3) {
+        while(response != 3 && bankers.get(currentBanker.getUsername()) != null) {
 
-            System.out.print("1 for random queries; 2 for specific Customer; 3 to quit: ");
+            System.out.print("1 for random queries; 2 for specific Customer; 3 to quit, 4 to delete account: ");
             response = in.nextInt();
             if(response == 1){
 
@@ -212,24 +272,36 @@ public class main{
                 }
 
             }
+            if(response == 4){
+                System.out.println("Are you sure you want to delete your account?[y]/[n]: ");
+                if(in.nextLine().equals("y")){
+                    System.out.println("Deleting account...");
+                    currentBanker = null;
+                    System.out.println("Thank you for working for us.");
+                    break;
+                }
+                else{
+                    System.out.println("returning...");
+                }
+            }
 
-            if(response != 3)
+            if(response != 3 && response != 2 && response != 1 && response != 4)
                 System.out.println("Unreadable response");
 
         }
-
+        return bankers;
     }
 
     //function for customer control flow
-    public static void customerLoop(Customer customer){
+    public static HashMap<String, Customer> customerLoop(Customer customer, HashMap<String, Customer> customers){
 
         Scanner scan = new Scanner(System.in);
         ArrayList<String> queries = customer.getQueries();
         String query = "";
-        while(!query.equals("quit")) {
+        while(customers.get(customer.getUsername()) != null) {
 
             System.out.println("[getCard],[deleteCard],[transfer],[deposit], \n" +
-                    "[withdrawal],[viewTransactions],[viewBalance],[quit]");
+                    "[withdrawal],[viewTransactions],[viewBalance],[deleteAccount],[quit]");
             System.out.print("What would you like to have done?: ");
             query = scan.next().toLowerCase();
             if(query.equals("quit"))
@@ -263,7 +335,7 @@ public class main{
 
                 case "withdrawal":
 
-                    System.out.println("How much?: ");
+                    System.out.print("How much?: ");
                     double quantity = scan.nextDouble();
                     customer.newTransaction(query, -1*quantity);
                     break;
@@ -273,7 +345,7 @@ public class main{
                     System.out.println("Most recent transactions: ");
                     ArrayList<HashMap<String,Double>> trans = customer.getTransactions();
                     for(int i = trans.size() - 1;
-                        i > Math.max(0,trans.size() - 11);i--){
+                        i >= Math.max(0,trans.size() - 11);i--){
                         for(String key: trans.get(i).keySet()){
                             System.out.println(" -" + key + ": " + trans.get(i).get(key));
                         }
@@ -287,12 +359,30 @@ public class main{
                     System.out.println();
                     break;
 
+                case "deleteaccount":
+                    if(customer.getBalance() == 0 && customer.getCreditCardDue() == 0){
+                        System.out.print("Are you sure you want to delete your account? [y]/[n]");
+                        String response = scan.next();
+                        if(response.equals("y")){
+                            System.out.println("Thank you for your business...");
+                            customers.remove(customer.getUsername());
+                            System.out.println("Account deleted");
+                            break;
+                        }
+                    }
+                    else{
+                        System.out.println("You cannot close your account when you have outstanding charges or " +
+                                "funds.");
+                    }
+                    break;
+
+
                 default:
                     System.out.println("This operation is not supported");
                     break;
             }
         }
-
+        return customers;
     }
 
     //method to open catalogue csv file, stores all customer and banker data into ArrayLists on memory
@@ -403,14 +493,18 @@ public class main{
 
             //writing each banker to csv file
             for(String key: Bankers.keySet()){
-                String[] bankerData = Bankers.get(key).createData();
-                writer.writeNext((bankerData));
+                if(Bankers.get(key) != null) {
+                    String[] bankerData = Bankers.get(key).createData();
+                    writer.writeNext((bankerData));
+                }
             }
 
             //writing each customer to csv file
             for(String key: Customers.keySet()){
-                String[] customerData = Customers.get(key).createData();
-                writer.writeNext(customerData);
+                if(Customers.get(key) != null) {
+                    String[] customerData = Customers.get(key).createData();
+                    writer.writeNext(customerData);
+                }
             }
 
             // closing writer connection
