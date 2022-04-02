@@ -43,8 +43,24 @@ public class Customer{
     queries = quer;
   }
 
+  @Override
+  //Simple toString for unit test purposes, lists all Customer attributes
+  public String toString() {
+    return "Customer{" +
+            "firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", age=" + age +
+            ", isFrozen=" + isFrozen +
+            ", balance=" + balance +
+            ", hasCreditCard=" + hasCreditCard +
+            ", creditCardDue=" + creditCardDue +
+            ", transactions=" + transactions +
+            ", queries=" + queries +
+            '}';
+  }
 
-  
   //newTransaction method that changes account value, and adds new transaction to transactions ArrayList
   public void newTransaction(String transactionName, double transactionValue){
     HashMap<String, Double>  n = new HashMap<>();

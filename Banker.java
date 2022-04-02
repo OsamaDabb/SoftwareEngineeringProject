@@ -2,19 +2,30 @@ import java.util.*;
 
 public class Banker{
 
-    private String firstName; // first name
-    private String lastName; // last name
     private String username;
     private String password;
+    private String firstName; // first name
+    private String lastName; // last name
     private ArrayList<HashMap<String, String>> record= new ArrayList<>();
 
-    public Banker(String f, String l, String u, String p){ // constructor for the Banker
+    public Banker(String u, String p, String f, String l){ // constructor for the Banker
 
-        firstName = f;
-        lastName = l;
         username = u;
         password = p;
+        firstName = f;
+        lastName = l;
 
+    }
+
+    @Override
+    public String toString() {
+        return "Banker{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", record=" + record +
+                '}';
     }
 
     public void createEntry(Customer C, String method){ // adds an entry to the record array list: method is the name of the method
