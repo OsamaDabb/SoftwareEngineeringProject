@@ -10,8 +10,9 @@ public class main{
         }
         ArrayList<Banker> Bankers = Data[0];
         ArrayList<Customer> Customers = Data[1];
+        System.out.println(Data);
     }
-  
+
     public static ArrayList[] loadData(){
         //Open the CSV data file
         Scanner scan;
@@ -45,11 +46,13 @@ public class main{
                 double b = scan.nextDouble();
                 boolean credit = scan.nextBoolean();
                 double creditDue = scan.nextDouble();
-                String[] transactionList = scan.next().split(".");
+                String[] transactionList = scan.next().split(";");
                 ArrayList<HashMap<String,Double>> transHash = new ArrayList<>();
-                for(int i = 0;i < transactionList.length/2;i += 2){
-                    String transName = scan.next();
-                    double transValue = scan.nextDouble();
+                for(int i = 0; i < 1;i ++){
+                    String transName = transactionList[i];
+                    System.out.println(transName);
+                    double transValue = Double.parseDouble(transactionList[i+1]);
+                    System.out.println(transValue);
                     HashMap<String,Double> n = new HashMap<>();
                     n.put(transName, transValue);
                     transHash.add(n);
