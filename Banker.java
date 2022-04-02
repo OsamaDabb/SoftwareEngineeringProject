@@ -49,7 +49,8 @@ public class Banker{
         C.setIsFrozen(false);
 
      }
-  
+
+
     public void transfer(Customer C1, Customer C2, double money){ // transfer money between accounts
      
       if(C1.getBalance() < money) // If the balance isn't enough to transfer

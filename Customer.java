@@ -12,7 +12,7 @@ public class Customer{
   private boolean hasCreditCard = false; //true if account has a card, false otherwise
   private double creditCardDue = 0;  //amount of money charged on account's credit card
   private ArrayList<HashMap<String, Double>> transactions = new ArrayList<>(); //debit transactions made by account
-  private ArraysList<String> queries = new ArrayList<>();
+  private ArrayList<String> queries = new ArrayList<>();
   
   
   public Customer(String u, String p, String fname, String lname, int a, double ba){
@@ -26,6 +26,21 @@ public class Customer{
     if(balance != 0){
       newTransaction("Initial deposit", balance);       
     }
+  }
+
+  public Customer(String u, String p, String fname, String lname, int a, boolean froz, double ba,
+                  boolean credit, double creditDue, ArrayList<HashMap<String, Double>> transact, ArrayList<String> quer){
+    username = u;
+    password = p;
+    firstName = fname;
+    lastName = lname;
+    age = a;
+    isFrozen = froz;
+    balance = ba;
+    hasCreditCard = credit;
+    creditCardDue = creditDue;
+    transactions = transact;
+    queries = quer;
   }
 
 
