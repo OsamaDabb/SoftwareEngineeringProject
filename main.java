@@ -16,7 +16,7 @@ public class main{
         HashMap<String, Customer> Customers = (HashMap<String, Customer>) Data.get(1);
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Are you a [customer] or [banker]?: ");
+        System.out.print("Are you a [customer] or [banker]?: ");
         label:
         while(true){
             String response = scanner.nextLine().toLowerCase();
@@ -25,18 +25,18 @@ public class main{
                 //if the user is a banker, ask for username and check valid password (only three attempts) then
                 //activate banker control flow
                 case "banker":
-                    System.out.println("Username: ");
+                    System.out.print("Username: ");
                     String bUsername = scanner.nextLine();
                     Banker currentBanker = Bankers.get(bUsername);
                     if (currentBanker != null) {
                         int attempts = 3;
-                        System.out.println("Password: ");
+                        System.out.print("Password: ");
                         while(attempts > 0){
                             String password = scanner.nextLine();
                             if(password == currentBanker.getPassword()){
                                 System.out.println("Signing in...");
                                 bankerLoop(currentBanker, Customers);
-                                break label;
+                                break;
                             }
                             else{
                                 attempts--;
@@ -54,17 +54,18 @@ public class main{
                 //if the user is a customer, ask for username and check valid password (only three attempts) then
                 //activate customer control flow
                 case "customer":
-                    System.out.println("Username: ");
+                    System.out.print("Username: ");
                     String username = scanner.nextLine();
                     Customer currentCustomer = Customers.get(username);
                     if (currentCustomer != null) {
                         int attempts = 3;
-                        System.out.println("Password: ");
+                        System.out.print("Password: ");
                         while(attempts > 0){
                             String password = scanner.nextLine();
                             if(password.equals(currentCustomer.getPassword())){
                                 System.out.println("Signing in...");
                                 customerLoop(currentCustomer);
+                                break;
                             }
                             else{
                                 attempts--;
@@ -83,10 +84,10 @@ public class main{
                 case "quit":
                     break label;
                 default:
-                    System.out.println("Response not recognized, type either customer, banker, or quit");
+                    System.out.println("Response not recognized.");
                     break;
             }
-            System.out.println("would you like to [quit] or log in as a new [customer] or [banker]?: ");
+            System.out.print("would you like to [quit] or log in as a new [customer] or [banker]?: ");
         }
 
 
@@ -121,7 +122,6 @@ public class main{
         String[] item;
         try {
             while ((item = csvReader.readNext()) != null) {
-                System.out.println(item[0]);
                 int itemID = Integer.parseInt(item[0]);
                 //control branch for banker data
                 //bankers expect 4 input variables
