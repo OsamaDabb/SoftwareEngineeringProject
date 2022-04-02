@@ -1,13 +1,10 @@
 import com.opencsv.*;
-import com.opencsv.exceptions.CsvValidationException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.io.*;
-
-
 
 public class main{
     public static void main(String args[]){
@@ -37,7 +34,7 @@ public class main{
                         while(attempts > 0){
                             String password = scanner.nextLine();
                             //correct password
-                            if(password == currentBanker.getPassword()){
+                            if(password.equals(currentBanker.getPassword())){
                                 System.out.println("Signing in...");
                                 bankerLoop(currentBanker, Customers);
                                 break;
@@ -100,15 +97,183 @@ public class main{
         }
 
         //saves any changes to the csv file
+        System.out.println(Customers.get("vish2"));
         saveData(Bankers, Customers);
     }
 
     private static void bankerLoop(Banker currentBanker, HashMap<String,Customer> customers) {
 
+        Scanner in = new Scanner(System.in);
+        System.out.println("Hi " + currentBanker.getName());
+        int response = -1;
+        while(response != 3) {
+
+            System.out.print("1 for random queries; 2 for specific Customer; 3 to quit: ");
+            response = in.nextInt();
+            if(response == 1){
+
+                for (Map.Entry mapElement : customers.entrySet()) {
+
+                    Customer C = (Customer)mapElement.getValue();
+                    ArrayList<String> queries = C.getQueries();
+                    if(queries.size()==0)
+                        continue;
+                    String query = queries.get(0);
+                    if(query.contains("?")){
+
+                        String[] contents = query.split("<");
+                        currentBanker.transfer(C, customers.get(contents[1]), Double.parseDouble(contents[2]));
+                        break;
+
+                    }
+                    switch (query){
+
+                        case "getCard":
+
+                            currentBanker.createCard(C);
+                            break;
+
+                        case "deleteCard":
+                            currentBanker.deleteCard(C);
+                            break;
+
+                        case "transfer":
+
+                            currentBanker.transfer(C, C, 0); // we ned to change this
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    break;
+
+                }
+
+            }
+
+            if(response == 2){
+
+                System.out.println("What is the username of the customer you want to view?: ");
+                String username = in.next();
+                Customer C = customers.get(username);
+                if (C == null){
+
+                    System.out.println("User doesn't exist");
+                    continue;
+
+                }
+                ArrayList<String> queries = C.getQueries();
+                System.out.println("1 to address queries and 2 for independent toggling: ");
+                int answer = in.nextInt();
+                String query;
+                if(answer == 1 )
+                    query = queries.get(0);
+                else if (answer == 2){
+
+                    System.out.println("What would you like to do?: ");
+                    query = in.next();
+
+                }
+
+                else {
+                    System.out.println("Unreadable response");
+                    continue;
+                }
+
+                if(query.contains("?")){
+
+                    String[] contents = query.split("<");
+                    currentBanker.transfer(C, customers.get(contents[1]), Double.parseDouble(contents[2]));
+                    continue;
+
+                }
+
+                switch (query){
+
+                    case "getCard":
+
+                        currentBanker.createCard(C);
+                        break;
+
+                    case "deleteCard":
+                        currentBanker.deleteCard(C);
+                        break;
+
+                    case "freeze":
+
+                        currentBanker.freeze(C);
+                        break;
+
+                    case "defreeze":
+                        currentBanker.defreeze(C);
+                        break;
+
+                    default:
+                        System.out.println("This operation is not supported");
+                        break;
+                }
+
+            }
+
+            if(response != 3)
+                System.out.println("Unreadable response");
+
+        }
+
     }
 
     //function for customer control flow
     public static void customerLoop(Customer customer){
+
+        Scanner scan = new Scanner(System.in);
+        ArrayList<String> queries = customer.getQueries();
+        String query = "";
+        while(!query.equals("quit")) {
+
+            System.out.println("What would you like to have done?:");
+            query = scan.next();
+            if(query.equals("quit"))
+                break;
+            switch (query) {
+
+                case "getCard":
+
+                    queries.add(query);
+                    break;
+
+                case "deleteCard":
+                    queries.add(query);
+                    break;
+
+                case "transfer":
+
+                    System.out.println("To whom?: ");
+                    String recipient = scan.next();
+                    System.out.println("How much?: ");
+                    double val = scan.nextDouble();
+                    queries.add(query + "<" + recipient + "<" + val); // we ned to change this
+                    break;
+
+                case "deposit":
+
+                    System.out.println("How much?: ");
+                    double amount = scan.nextDouble();
+                    customer.newTransaction(query, amount);
+                    break;
+
+                case "withdrawal":
+
+                    System.out.println("How much?: ");
+                    double quantity = scan.nextDouble();
+                    customer.newTransaction(query, quantity);
+                    break;
+
+                default:
+                    System.out.println("This operation is not supported");
+                    break;
+            }
+        }
 
     }
 
@@ -117,7 +282,7 @@ public class main{
         //Open the CSV data file
         FileReader filereader;
         try{
-            filereader = new FileReader("catalogue.csv");
+            filereader = new FileReader("/Users/fish/Desktop/School/411/src/catalogue.csv");
         } catch (FileNotFoundException e) {
             System.out.println("Catalogue.csv missing");
             return null;
@@ -175,10 +340,10 @@ public class main{
                     String quer = item[11];
                     ArrayList<String> queries;
                     //queries are saved as "None" in saveData() if a user has no queries
-                    if (quer == "None") {
+                    if (quer.equals("None")) {
                         queries = new ArrayList<>();
                     } else {
-                        String[] queryList = quer.split(".");
+                        String[] queryList = quer.split(";");
                         queries = new ArrayList<>(List.of(queryList));
                     }
 
