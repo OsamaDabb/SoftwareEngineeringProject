@@ -97,5 +97,11 @@ public class Banker{
     public String getPassword(){
         return password;
     }
+    
+    public String getName(){
+        
+        return firstName + lastName;
+        
+    }
 
 }
