@@ -28,6 +28,10 @@ public class Banker{
                 '}';
     }
 
+    public String[] createData(){
+        return new String[] {"0", username, password, firstName, lastName};
+    }
+
     public void createEntry(Customer C, String method){ // adds an entry to the record array list: method is the name of the method
 
         HashMap<String, String> rec = new HashMap<>();

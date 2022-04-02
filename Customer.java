@@ -61,6 +61,29 @@ public class Customer{
             '}';
   }
 
+  public String[] createData(){
+    ArrayList<String> transactionArray = new ArrayList<>();
+    for(HashMap map: transactions) {
+      for (Object val : map.keySet()) {
+        transactionArray.add(String.valueOf(val));
+        transactionArray.add(String.valueOf(map.get(val)));
+      }
+    }
+    String transactionString = String.join(";",transactionArray);
+
+    String queryString;
+    if(queries.isEmpty()){
+      queryString = "None";
+    }
+    else {
+      queryString = String.join(".", queries);
+    }
+
+    return new String[] {"1",username,password,firstName,lastName,
+            String.valueOf(age),String.valueOf(isFrozen),String.valueOf(balance),String.valueOf(hasCreditCard),
+            String.valueOf(creditCardDue),transactionString,queryString};
+  }
+
   //newTransaction method that changes account value, and adds new transaction to transactions ArrayList
   public void newTransaction(String transactionName, double transactionValue){
     HashMap<String, Double>  n = new HashMap<>();
