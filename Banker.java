@@ -86,8 +86,8 @@ public class Banker{
 
         if(C1.getBalance() < money) // If the balance isn't enough to transfer
             throw new IllegalArgumentException("Not enough balance");
-        C2.newTransaction("Account transfer from" + C1.getUsername(), money); // Put money into C2
-        C1.newTransaction("Account transfer to" + C1.getUsername(), money); // Take money out of C1
+        C2.newTransaction("Account transfer from " + C1.getUsername(), money); // Put money into C2
+        C1.newTransaction("Account transfer to " + C1.getUsername(), -1 * money); // Take money out of C1
         createEntry(C1, "transferout");
         createEntry(C2, "transferin");
 

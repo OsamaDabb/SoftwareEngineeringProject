@@ -119,7 +119,7 @@ public class main{
                     if(queries.size()==0)
                         continue;
                     String query = queries.get(0);
-                    if(query.contains("?")){
+                    if(query.contains("<")){
 
                         String[] contents = query.split("<");
                         currentBanker.transfer(C, customers.get(contents[1]), Double.parseDouble(contents[2]));
@@ -137,11 +137,6 @@ public class main{
                             currentBanker.deleteCard(C);
                             break;
 
-                        case "transfer":
-
-                            currentBanker.transfer(C, C, 0); // we ned to change this
-                            break;
-
                         default:
                             break;
                     }
@@ -154,7 +149,7 @@ public class main{
 
             if(response == 2){
 
-                System.out.println("What is the username of the customer you want to view?: ");
+                System.out.print("What is the username of the customer you want to view?: ");
                 String username = in.next();
                 Customer C = customers.get(username);
                 if (C == null){
@@ -164,14 +159,16 @@ public class main{
 
                 }
                 ArrayList<String> queries = C.getQueries();
-                System.out.println("1 to address queries and 2 for independent toggling: ");
+                System.out.print("1 to address queries and 2 for independent toggling: ");
                 int answer = in.nextInt();
                 String query;
-                if(answer == 1 )
+                if(answer == 1) {
                     query = queries.get(0);
+                    queries.remove(0);
+                }
                 else if (answer == 2){
 
-                    System.out.println("What would you like to do?: ");
+                    System.out.print("What would you like to do?: ");
                     query = in.next();
 
                 }
@@ -181,7 +178,7 @@ public class main{
                     continue;
                 }
 
-                if(query.contains("?")){
+                if(query.contains("<")){
 
                     String[] contents = query.split("<");
                     currentBanker.transfer(C, customers.get(contents[1]), Double.parseDouble(contents[2]));
@@ -191,12 +188,12 @@ public class main{
 
                 switch (query){
 
-                    case "getCard":
+                    case "getcard":
 
                         currentBanker.createCard(C);
                         break;
 
-                    case "deleteCard":
+                    case "deletecard":
                         currentBanker.deleteCard(C);
                         break;
 
@@ -231,18 +228,20 @@ public class main{
         String query = "";
         while(!query.equals("quit")) {
 
-            System.out.println("What would you like to have done?:");
-            query = scan.next();
+            System.out.println("[getCard],[deleteCard],[transfer],[deposit], \n" +
+                    "[withdrawal],[viewTransactions],[viewBalance],[quit]");
+            System.out.print("What would you like to have done?: ");
+            query = scan.next().toLowerCase();
             if(query.equals("quit"))
                 break;
             switch (query) {
 
-                case "getCard":
+                case "getcard":
 
                     queries.add(query);
                     break;
 
-                case "deleteCard":
+                case "deletecard":
                     queries.add(query);
                     break;
 
@@ -252,7 +251,7 @@ public class main{
                     String recipient = scan.next();
                     System.out.println("How much?: ");
                     double val = scan.nextDouble();
-                    queries.add(query + "<" + recipient + "<" + val); // we ned to change this
+                    queries.add(query + "<" + recipient + "<" + val); // we need to change this
                     break;
 
                 case "deposit":
@@ -266,7 +265,26 @@ public class main{
 
                     System.out.println("How much?: ");
                     double quantity = scan.nextDouble();
-                    customer.newTransaction(query, quantity);
+                    customer.newTransaction(query, -1*quantity);
+                    break;
+
+                case "viewtransactions":
+                    System.out.println();
+                    System.out.println("Most recent transactions: ");
+                    ArrayList<HashMap<String,Double>> trans = customer.getTransactions();
+                    for(int i = trans.size() - 1;
+                        i > Math.max(0,trans.size() - 11);i--){
+                        for(String key: trans.get(i).keySet()){
+                            System.out.println(" -" + key + ": " + trans.get(i).get(key));
+                        }
+                    }
+                    System.out.println();
+                    break;
+
+                case "viewbalance":
+                    System.out.println();
+                    System.out.println(" -Your current balance is: " + customer.getBalance());
+                    System.out.println();
                     break;
 
                 default:
@@ -282,7 +300,7 @@ public class main{
         //Open the CSV data file
         FileReader filereader;
         try{
-            filereader = new FileReader("/Users/fish/Desktop/School/411/src/catalogue.csv");
+            filereader = new FileReader("catalogue.csv");
         } catch (FileNotFoundException e) {
             System.out.println("Catalogue.csv missing");
             return null;
