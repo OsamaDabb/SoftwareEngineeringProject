@@ -26,6 +26,8 @@ public class Customer{
       newTransaction("Initial deposit", balance);       
     }
   }
+
+
   
   //newTransaction method that changes account value, and adds new transaction to transactions ArrayList
   public void newTransaction(String transactionName, double transactionValue){
