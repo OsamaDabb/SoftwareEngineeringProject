@@ -8,23 +8,102 @@ import java.io.*;
 
 public class main{
     public static void main(String args[]){
-        ArrayList[] Data = loadData();
+        ArrayList Data = loadData();
         if(Data == null){
             return;
         }
-        ArrayList<Banker> Bankers = Data[0];
-        ArrayList<Customer> Customers = Data[1];
-        System.out.println(Bankers);
-        System.out.println(Customers);
+        HashMap<String, Banker> Bankers = (HashMap<String, Banker>) Data.get(0);
+        HashMap<String, Customer> Customers = (HashMap<String, Customer>) Data.get(1);
 
-        Bankers.add(new Banker("CamA","password","Cameron","Anderegg"));
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Are you a [customer] or [banker]?: ");
+        label:
+        while(true){
+            String response = scanner.nextLine().toLowerCase();
 
-        Customers.add(new Customer("Azam25","0704","Azamat","Khan",20,500));
+            switch (response) {
+                //if the user is a banker, ask for username and check valid password (only three attempts) then
+                //activate banker control flow
+                case "banker":
+                    System.out.println("Username: ");
+                    String bUsername = scanner.nextLine();
+                    Banker currentBanker = Bankers.get(bUsername);
+                    if (currentBanker != null) {
+                        int attempts = 3;
+                        System.out.println("Password: ");
+                        while(attempts > 0){
+                            String password = scanner.nextLine();
+                            if(password == currentBanker.getPassword()){
+                                System.out.println("Signing in...");
+                                bankerLoop(currentBanker, Customers);
+                                break label;
+                            }
+                            else{
+                                attempts--;
+                                System.out.println("Incorrect, you have " + attempts + " attempts left.");
+                            }
+                        }
+                        break label;
+
+                    }
+                    else{
+                        System.out.println("User does not exist");
+                    }
+                    break;
+
+                //if the user is a customer, ask for username and check valid password (only three attempts) then
+                //activate customer control flow
+                case "customer":
+                    System.out.println("Username: ");
+                    String username = scanner.nextLine();
+                    Customer currentCustomer = Customers.get(username);
+                    if (currentCustomer != null) {
+                        int attempts = 3;
+                        System.out.println("Password: ");
+                        while(attempts > 0){
+                            String password = scanner.nextLine();
+                            if(password.equals(currentCustomer.getPassword())){
+                                System.out.println("Signing in...");
+                                customerLoop(currentCustomer);
+                            }
+                            else{
+                                attempts--;
+                                System.out.println("Incorrect, you have " + attempts + " attempts left.");
+                            }
+                        }
+                        break label;
+
+                    }
+                    else{
+                        System.out.println("User does not exist");
+                    }
+                    break;
+
+
+                case "quit":
+                    break label;
+                default:
+                    System.out.println("Response not recognized, type either customer, banker, or quit");
+                    break;
+            }
+            System.out.println("would you like to [quit] or log in as a new [customer] or [banker]?: ");
+        }
+
+
         saveData(Bankers, Customers);
     }
 
+    private static void bankerLoop(Banker currentBanker, HashMap<String,Customer> customers) {
+
+    }
+
+    //function for customer control flow
+    public static void customerLoop(Customer customer){
+
+    }
+
     //method to open catalogue csv file, stores all customer and banker data into ArrayLists on memory
-    public static ArrayList[] loadData() {
+    public static ArrayList loadData() {
         //Open the CSV data file
         FileReader filereader;
         try{
@@ -35,8 +114,8 @@ public class main{
         }
         CSVReader csvReader = new CSVReader(filereader);
 
-        ArrayList<Customer> Customers = new ArrayList<Customer>();
-        ArrayList<Banker> Bankers = new ArrayList<Banker>();
+        HashMap<String, Object> CustomerMap = new HashMap<>();
+        HashMap<String, Object> BankerMap = new HashMap<>();
 
         //seperate csv file by commas
         String[] item;
@@ -54,7 +133,7 @@ public class main{
                     String l = item[4];
                     //call constructor on new banker then add banker to array of Bankers
                     Banker newBanker = new Banker(u, p, f, l);
-                    Bankers.add(newBanker);
+                    BankerMap.put(u, newBanker);
                 }
                 //control branch for customers
                 //customers expect 11 inputs of data
@@ -96,13 +175,16 @@ public class main{
 
                     //adds new customer to ArrayList Customers
                     Customer newCustomer = new Customer(u, p, f, l, a, froz, b, credit, creditDue, transHash, queries);
-                    Customers.add(newCustomer);
+                    CustomerMap.put(u,newCustomer);
                 }
             }
 
             csvReader.close();
             //return the new ArrayLists to the main method
-            return new ArrayList[]{Bankers, Customers};
+            ArrayList<HashMap<String,Object>> x = new ArrayList<HashMap<String,Object>>();
+            x.add(BankerMap);
+            x.add(CustomerMap);
+            return x;
         }
         catch(Exception e) {
             System.out.println("Formatting error while loading data");
@@ -110,7 +192,7 @@ public class main{
         }
     }
 
-    public static void saveData( ArrayList<Banker> Bankers, ArrayList<Customer> Customers){
+    public static void saveData(HashMap<String, Banker> Bankers, HashMap<String, Customer> Customers){
         File file = new File("catalogue.csv");
         try {
             // create FileWriter object with file as parameter
@@ -120,14 +202,14 @@ public class main{
             CSVWriter writer = new CSVWriter(outputfile);
 
             //writing each banker to csv file
-            for(int i = 0;i < Bankers.size();i++){
-                String[] bankerData = Bankers.get(i).createData();
-                writer.writeNext(bankerData);
+            for(String key: Bankers.keySet()){
+                String[] bankerData = Bankers.get(key).createData();
+                writer.writeNext((bankerData));
             }
 
             //writing each customer to csv file
-            for(int i = 0;i < Customers.size(); i++){
-                String[] customerData = Customers.get(i).createData();
+            for(String key: Customers.keySet()){
+                String[] customerData = Customers.get(key).createData();
                 writer.writeNext(customerData);
             }
 

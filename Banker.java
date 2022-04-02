@@ -94,4 +94,8 @@ public class Banker{
 
     }
 
+    public String getPassword(){
+        return password;
+    }
+
 }
