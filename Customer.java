@@ -6,10 +6,10 @@ public class Customer{
     private String password;
     private final String firstName;
     private final String lastName;
-    private int age;
-    private boolean isFrozen; //true if account has been frozen, false otherwise
+    private final int age;
+    private boolean isFrozen; //true if frozen, false otherwise
     private double balance; //Customers account balance
-    private boolean hasCreditCard = false; //true if account has a card, false otherwise
+    private int hasCreditCard = 0; //1 if account has card, 0 if not, 2 if newly given card
     private double creditCardDue = 0;  //amount of money charged on account's credit card
     private ArrayList<HashMap<String, Double>> transactions = new ArrayList<>(); //debit transactions made by account
     private ArrayList<String> queries = new ArrayList<>();
@@ -29,7 +29,7 @@ public class Customer{
     }
 
     public Customer(String u, String p, String fname, String lname, int a, boolean froz, double ba,
-                    boolean credit, double creditDue, ArrayList<HashMap<String, Double>> transact, ArrayList<String> quer){
+                    int credit, double creditDue, ArrayList<HashMap<String, Double>> transact, ArrayList<String> quer){
         username = u;
         password = p;
         firstName = fname;
@@ -63,7 +63,7 @@ public class Customer{
 
     public String[] createData(){
         ArrayList<String> transactionArray = new ArrayList<>();
-        for(HashMap map: transactions) {
+        for(HashMap<String, Double> map: transactions) {
             for (Object val : map.keySet()) {
                 transactionArray.add(String.valueOf(val));
                 transactionArray.add(String.valueOf(map.get(val)));
@@ -129,11 +129,11 @@ public class Customer{
         return balance;
     }
 
-    public boolean hasCreditCard(){
+    public int hasCreditCard(){
         return hasCreditCard;
     }
 
-    public void setCreditCard(boolean newCard){
+    public void setCreditCard(int newCard){
         hasCreditCard = newCard;
     }
 

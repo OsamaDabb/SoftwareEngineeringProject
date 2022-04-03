@@ -42,11 +42,11 @@ public class Banker{
 
     public void createCard(Customer C){
 
-        if(C.hasCreditCard()) // If they already have a credit card
+        if(C.hasCreditCard() == 1 || C.hasCreditCard() == 2) // If they already have a credit card
             throw new IllegalArgumentException("Already has a credit card");
         if(C.getAge() < 18) // Minors can't have cards
             throw new IllegalArgumentException("Underage");
-        C.setCreditCard(true);
+        C.setCreditCard(2);
 
         createEntry(C, "createCard");
 
@@ -54,11 +54,11 @@ public class Banker{
 
     public void deleteCard(Customer C){
 
-        if(!C.hasCreditCard()) // They don't have one anyway
+        if(C.hasCreditCard() == 0 || C.hasCreditCard() == -1) // They don't have one anyway
             throw new IllegalArgumentException("No Card Found");
         if(C.getCreditCardDue()!=0) // They need to settle all their bills before closing it
             throw new IllegalArgumentException("Bills not paid");
-        C.setCreditCard(false);
+        C.setCreditCard(-1);
 
         createEntry(C, "deleteCard");
 

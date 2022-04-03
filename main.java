@@ -6,8 +6,9 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.io.*;
 
+
 public class main{
-    public static void main(String args[]){
+    public static void main(String[] args){
         ArrayList Data = loadData();
         if(Data == null){
             return;
@@ -120,8 +121,8 @@ public class main{
                     Customer currentCustomer = Customers.get(username);
                     if (currentCustomer != null) {
                         int attempts = 3;
-                        System.out.print("Password: ");
                         while(attempts > 0){
+                            System.out.print("Password: ");
                             String password = scanner.nextLine();
                             //correct password given
                             if(password.equals(currentCustomer.getPassword())){
@@ -155,7 +156,6 @@ public class main{
         }
 
         //saves any changes to the csv file
-        System.out.println(Customers.get("vish2"));
         System.out.println("Saving and exiting...");
         saveData(Bankers, Customers);
     }
@@ -295,6 +295,21 @@ public class main{
     //function for customer control flow
     public static HashMap<String, Customer> customerLoop(Customer customer, HashMap<String, Customer> customers){
 
+        if(customer.isFrozen()){
+            System.out.println("Your account has been frozen due to suspicious activity,");
+            System.out.println("Please Call us at 555-555-555 to reinstate the account.");
+            return customers;
+        }
+
+        if(customer.hasCreditCard() == 2){
+            System.out.println("Congratulations, your credit card request has been approved!");
+            customer.setCreditCard(1);
+        }
+        else if(customer.hasCreditCard() == -1){
+            System.out.println("Your credit card has been successfully cancelled");
+            customer.setCreditCard(0);
+        }
+
         Scanner scan = new Scanner(System.in);
         ArrayList<String> queries = customer.getQueries();
         String query = "";
@@ -428,7 +443,7 @@ public class main{
                     int a = Integer.parseInt(item[5]);
                     boolean froz = Boolean.parseBoolean(item[6]);
                     double b = Double.parseDouble(item[7]);
-                    boolean credit = Boolean.parseBoolean(item[8]);
+                    int credit = Integer.parseInt(item[8]);
                     double creditDue = Double.parseDouble(item[9]);
 
                     //seperating csv for transactions (stored as: transID;transVal;transID;transVal pairs)
@@ -469,6 +484,7 @@ public class main{
             return x;
         }
         catch(Exception e) {
+            System.out.println(e);
             System.out.println("Formatting error while loading data");
             return null;
         }
@@ -513,7 +529,6 @@ public class main{
         catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 }

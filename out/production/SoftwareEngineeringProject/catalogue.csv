@@ -1,5 +1,4 @@
 "0","osama2","1234","Osama","Dabbousi"
 "0","CamA","password","Cameron","Anderegg"
-"1","Azam25","0704","Azamat","Khan","20","false","580.0","false","0.0","Initial deposit;500.0;Account transfer from vish2;80.0","None"
-"1","Jlennon","beatles","John","Lennon","90","false","0.0","false","0.0","Initial deposit;1000.0;withdrawal;-1000.0;withdrawal;-100000.0;deposit;99000.0","None"
-"1","vish2","4321","Vishesh","Jain","92","true","7000.01","true","0.0","initial;1080.01;Account transfer to vish2;-80.0;deposit;6000.0","None"
+"1","Azam25","0704","Azamat","Khan","20","false","580.0","0","0.0","Initial deposit;500.0;Account transfer from vish2;80.0","None"
+"1","vish2","4321","Vishesh","Jain","92","false","7000.01","1","0.0","initial;1080.01;Account transfer to vish2;-80.0;deposit;6000.0","None"
