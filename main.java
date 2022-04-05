@@ -187,9 +187,13 @@ public class main{
         int count =  0;
         while(response != 3 && bankers.get(currentBanker.getUsername()) != null) {
 
-            count++;
-            if(count % 3 == 0)
+            if(count % 3 == 0){
+
+                System.out.println("Saving");
                 saveData(bankers, customers);
+
+            }
+            count++;
             System.out.print("1 for random queries; 2 for specific Customer; 3 to quit, 4 to delete account: ");
             response = in.nextInt();
             if(response == 1){
@@ -341,12 +345,17 @@ public class main{
         Scanner scan = new Scanner(System.in);
         ArrayList<String> queries = customer.getQueries();
         String query = "";
-        int count = 0 ; 
+        int count = 0 ;
         while(customers.get(customer.getUsername()) != null) {
+
             
-            count++;
-            if(count % 3 == 0)
+            if(count % 3 == 0){
+                
+                System.out.println("Saving");
                 saveData(Bankers, customers);
+
+            }
+            count++;
             System.out.println("[getCard],[deleteCard],[transfer],[deposit], \n" +
                     "[withdrawal],[viewTransactions],[viewBalance],[deleteAccount],[quit]");
             System.out.print("What would you like to have done?: ");
@@ -366,16 +375,16 @@ public class main{
 
                 case "transfer":
 
-                    System.out.println("To whom?: ");
+                    System.out.print("To whom?: ");
                     String recipient = scan.next();
-                    System.out.println("How much?: ");
+                    System.out.print("How much?: ");
                     double val = scan.nextDouble();
                     queries.add(query + "<" + recipient + "<" + val); // we need to change this
                     break;
 
                 case "deposit":
 
-                    System.out.println("How much?: ");
+                    System.out.print("How much?: ");
                     double amount = scan.nextDouble();
                     customer.newTransaction(query, amount);
                     break;
