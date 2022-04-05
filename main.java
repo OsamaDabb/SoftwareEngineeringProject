@@ -95,6 +95,15 @@ public class main{
                             //correct password
                             if(password.equals(currentBanker.getPassword())){
                                 System.out.println("Signing in...");
+                                try
+                                {
+                                    // Delay for 2 seonds
+                                    Thread.sleep(2000);
+                                }
+                                catch(InterruptedException ex)
+                                {
+                                    ex.printStackTrace();
+                                }
                                 Bankers = bankerLoop(currentBanker, Customers, Bankers);
                                 break;
                             }
@@ -127,7 +136,16 @@ public class main{
                             //correct password given
                             if(password.equals(currentCustomer.getPassword())){
                                 System.out.println("Signing in...");
-                                Customers = customerLoop(currentCustomer, Customers);
+                                try
+                                {
+                                    // Delay for 2 seonds
+                                    Thread.sleep(2000);
+                                }
+                                catch(InterruptedException ex)
+                                {
+                                    ex.printStackTrace();
+                                }
+                                Customers = customerLoop(currentCustomer, Bankers, Customers);
                                 break;
                             }
                             //incorrect password
@@ -166,8 +184,12 @@ public class main{
         Scanner in = new Scanner(System.in);
         System.out.println("Hi " + currentBanker.getName());
         int response = -1;
+        int count =  0;
         while(response != 3 && bankers.get(currentBanker.getUsername()) != null) {
 
+            count++;
+            if(count % 3 == 0)
+                saveData(bankers, customers);
             System.out.print("1 for random queries; 2 for specific Customer; 3 to quit, 4 to delete account: ");
             response = in.nextInt();
             if(response == 1){
@@ -179,6 +201,8 @@ public class main{
                     if(queries.size()==0)
                         continue;
                     String query = queries.get(0);
+                    System.out.println(C);
+                    System.out.println("You are solving " + query);
                     if(query.contains("<")){
 
                         String[] contents = query.split("<");
@@ -219,15 +243,19 @@ public class main{
 
                 }
                 ArrayList<String> queries = C.getQueries();
+                System.out.println(C);
                 System.out.print("1 to address queries and 2 for independent toggling: ");
                 int answer = in.nextInt();
                 String query;
                 if(answer == 1) {
                     query = queries.get(0);
                     queries.remove(0);
+                    System.out.println("You are solving " + query);
+
                 }
                 else if (answer == 2){
 
+                    System.out.println("[getCard],[deleteCard],[freeze],[defreeze]");
                     System.out.print("What would you like to do?: ");
                     query = in.next();
 
@@ -273,7 +301,7 @@ public class main{
 
             }
             if(response == 4){
-                System.out.println("Are you sure you want to delete your account?[y]/[n]: ");
+                System.out.println("Are you sure you want to delete this account?[y]/[n]: ");
                 if(in.nextLine().equals("y")){
                     System.out.println("Deleting account...");
                     currentBanker = null;
@@ -293,7 +321,7 @@ public class main{
     }
 
     //function for customer control flow
-    public static HashMap<String, Customer> customerLoop(Customer customer, HashMap<String, Customer> customers){
+    public static HashMap<String, Customer> customerLoop(Customer customer, HashMap<String, Banker> Bankers,  HashMap<String, Customer> customers){
 
         if(customer.isFrozen()){
             System.out.println("Your account has been frozen due to suspicious activity,");
@@ -313,8 +341,12 @@ public class main{
         Scanner scan = new Scanner(System.in);
         ArrayList<String> queries = customer.getQueries();
         String query = "";
+        int count = 0 ; 
         while(customers.get(customer.getUsername()) != null) {
-
+            
+            count++;
+            if(count % 3 == 0)
+                saveData(Bankers, customers);
             System.out.println("[getCard],[deleteCard],[transfer],[deposit], \n" +
                     "[withdrawal],[viewTransactions],[viewBalance],[deleteAccount],[quit]");
             System.out.print("What would you like to have done?: ");
@@ -443,9 +475,11 @@ public class main{
                     int a = Integer.parseInt(item[5]);
                     boolean froz = Boolean.parseBoolean(item[6]);
                     double b = Double.parseDouble(item[7]);
-                    int credit = Integer.parseInt(item[8]);
-                    double creditDue = Double.parseDouble(item[9]);
 
+                    int credit = Integer.parseInt(item[8]);
+                    System.out.println("reached");
+
+                    double creditDue = Double.parseDouble(item[9]);
                     //seperating csv for transactions (stored as: transID;transVal;transID;transVal pairs)
                     String[] transactionList = item[10].split(";");
                     ArrayList<HashMap<String, Double>> transHash = new ArrayList<>();
