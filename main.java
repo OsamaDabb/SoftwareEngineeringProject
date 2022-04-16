@@ -30,6 +30,7 @@ public class main{
                     String resp = scanner.nextLine();
                     switch(resp){
                         case "customer":
+                            //collects all relevant information for a new customer
                             System.out.print("First Name?: ");
                             String f = scanner.nextLine();
                             System.out.print("Last Name?: ");
@@ -41,6 +42,7 @@ public class main{
                             System.out.print("Age?: ");
                             int a = scanner.nextInt();
                             if(a < 13){
+                                //prevent account creation if too young
                                 System.out.println("Sorry, you must be at least 13 to create an account.");
                             }
                             else{
@@ -48,6 +50,7 @@ public class main{
                                 double ba = scanner.nextDouble();
                                 System.out.println("Creating account...");
                                 Customer newCustomer = new Customer(u,p,f,l,a,ba);
+                                //add newly created customer to customers list
                                 Customers.put(u,newCustomer);
                                 System.out.println("Welcome to CAVO bank, " + f + " " + l + "!");
                                 System.out.println("Returning to login screen...");
@@ -55,6 +58,7 @@ public class main{
                             break;
 
                         case "banker":
+                            //collect all relevant information for a new banker
                             System.out.print("First Name?: ");
                             String fb = scanner.nextLine();
                             System.out.print("Last Name?: ");
@@ -63,10 +67,12 @@ public class main{
                             String ub = scanner.nextLine();
                             System.out.print("Password?: ");
                             String pb = scanner.nextLine();
+                            //require authentication code so non-affiliated users cannot create banking accounts
                             System.out.print("Enter authentication code: ");
                             if(scanner.nextLine().equals("COVAcode")){
                                 System.out.println("Creating account...");
                                 Banker newBanker = new Banker(ub,pb,fb,lb);
+                                //adds newly created banker to bankers list
                                 Bankers.put(ub,newBanker);
                                 System.out.println("Welcome to CAVO bank, " + fb + " " + lb + "!");
                                 System.out.println("Returning to login screen...");
@@ -181,6 +187,7 @@ public class main{
     private static HashMap<String, Banker> bankerLoop(Banker currentBanker,
                                                       HashMap<String,Customer> customers, HashMap<String, Banker> bankers) {
 
+        //Loop of inputs and actions for banker after log in
         Scanner in = new Scanner(System.in);
         System.out.println("Hi " + currentBanker.getName());
         int response = -1;
@@ -194,10 +201,11 @@ public class main{
 
             }
             count++;
+            //First input seeks type of input
             System.out.print("1 for random queries; 2 for specific Customer; 3 to quit, 4 to delete account: ");
             response = in.nextInt();
             if(response == 1){
-
+                //gives banker the list of most urgent queries from all users, and allows them to approve/deny
                 for (Map.Entry mapElement : customers.entrySet()) {
 
                     Customer C = (Customer)mapElement.getValue();
@@ -236,7 +244,7 @@ public class main{
             }
 
             if(response == 2){
-
+                //get access to a specific users account information, and address their pending queries
                 System.out.print("What is the username of the customer you want to view?: ");
                 String username = in.next();
                 Customer C = customers.get(username);
@@ -279,7 +287,7 @@ public class main{
                 }
 
                 switch (query){
-
+                    //possible actions on a customers account
                     case "getcard":
 
                         currentBanker.createCard(C);
@@ -456,7 +464,7 @@ public class main{
         HashMap<String, Object> CustomerMap = new HashMap<>();
         HashMap<String, Object> BankerMap = new HashMap<>();
 
-        //seperate csv file by commas
+        //Loop through lines of csv file, loading each row to CustomerMap or BankerMap
         String[] item;
         try {
             while ((item = csvReader.readNext()) != null) {
@@ -473,7 +481,7 @@ public class main{
                     Banker newBanker = new Banker(u, p, f, l);
                     BankerMap.put(u, newBanker);
                 }
-                //control branch for customers
+                //control branch for customers data load
                 //customers expect 11 inputs of data
                 else if (itemID == 1) {
                     //simple string/int/bool scans from csv file for basic user data
@@ -527,6 +535,7 @@ public class main{
             return x;
         }
         catch(Exception e) {
+            //in the case where csv data is improperly ordered or missing information, ends program
             System.out.println(e);
             System.out.println("Formatting error while loading data");
             return null;
