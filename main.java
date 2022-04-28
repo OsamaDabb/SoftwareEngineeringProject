@@ -240,6 +240,7 @@ public class main{
                     break;
 
                 }
+                System.out.println("There are no more queries");
 
             }
 
@@ -376,7 +377,6 @@ public class main{
 
                     queries.add(query);
                     break;
-
                 case "deletecard":
                     queries.add(query);
                     break;
