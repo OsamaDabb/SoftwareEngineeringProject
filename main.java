@@ -376,25 +376,35 @@ public class main{
                 case "getcard":
 
                     queries.add(query);
+                    System.out.println("Card request sent");
+                    System.out.println();
                     break;
                 case "deletecard":
                     queries.add(query);
+                    System.out.println("Request has been sent");
                     break;
 
                 case "transfer":
 
-                    System.out.print("To whom?: ");
+                    System.out.print("Who would you like to transfer to?: ");
                     String recipient = scan.next();
                     System.out.print("How much?: ");
                     double val = scan.nextDouble();
                     queries.add(query + "<" + recipient + "<" + val); // we need to change this
+                    System.out.println("Your transfer request has been sent.");
+                    System.out.println();
                     break;
 
                 case "deposit":
 
-                    System.out.print("How much?: ");
+                    System.out.print("How much would you like to deposit?: ");
                     double amount = scan.nextDouble();
                     customer.newTransaction(query, amount);
+
+                    System.out.println();
+                    System.out.println(" -Your new balance is: " + customer.getBalance());
+                    System.out.println();
+
                     break;
 
                 case "withdrawal":
@@ -402,6 +412,11 @@ public class main{
                     System.out.print("How much?: ");
                     double quantity = scan.nextDouble();
                     customer.newTransaction(query, -1*quantity);
+
+                    System.out.println();
+                    System.out.println(" -Your new balance is: " + customer.getBalance());
+                    System.out.println();
+
                     break;
 
                 case "viewtransactions":
@@ -456,7 +471,7 @@ public class main{
         try{
             filereader = new FileReader("catalogue.csv");
         } catch (FileNotFoundException e) {
-            System.out.println("Catalogue.csv missing");
+            System.out.println("Catalogue.csv not found in directory.");
             return null;
         }
         CSVReader csvReader = new CSVReader(filereader);
@@ -550,7 +565,9 @@ public class main{
         try{
             Files.copy(path,out);
         }
-        catch(IOException e){}
+        catch(IOException e){
+            System.out.println("Unable to update database back-up. Program still functions as intended.");
+        }
         try {
             // create FileWriter object with file as parameter
             FileWriter outputfile = new FileWriter(file);
@@ -578,6 +595,7 @@ public class main{
             writer.close();
         }
         catch (IOException e) {
+            System.out.println("Program changes were not saved.");
             e.printStackTrace();
         }
 
