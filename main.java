@@ -194,7 +194,7 @@ public class main{
         int count =  0;
         while(response != 3 && bankers.get(currentBanker.getUsername()) != null) {
 
-            if(count % 3 == 0){
+            if(count % 3 == 2){
 
                 System.out.println("Saving");
                 saveData(bankers, customers);
@@ -358,7 +358,7 @@ public class main{
         while(customers.get(customer.getUsername()) != null) {
 
             
-            if(count % 3 == 0){
+            if(count % 3 == 2){
                 
                 System.out.println("Saving");
                 saveData(Bankers, customers);
@@ -494,7 +494,6 @@ public class main{
                     double b = Double.parseDouble(item[7]);
 
                     int credit = Integer.parseInt(item[8]);
-                    System.out.println("reached");
 
                     double creditDue = Double.parseDouble(item[9]);
                     //seperating csv for transactions (stored as: transID;transVal;transID;transVal pairs)
